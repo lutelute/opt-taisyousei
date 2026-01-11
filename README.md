@@ -4,7 +4,9 @@
 
 ## Demo
 
-![Demo](demo.webp)
+https://github.com/user-attachments/assets/demo.mov
+
+*(動画が表示されない場合は[こちら](demo.mov)からダウンロード)*
 
 ## Features
 
