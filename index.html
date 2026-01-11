@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asymmetric Optimization Visualizer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Optimization Performance Comparison</h1>
+            <p class="subtitle">Symmetric vs. <span class="highlight">Asymmetric (Proposed)</span></p>
+
+            <div class="controls_top">
+                <label for="problem_scale">Problem Scale:</label>
+                <select id="problem_scale" class="scale_selector">
+                    <option value="small">Small Scale (Local Logistics, N=100)</option>
+                    <option value="large" selected>Large Scale (Global Network, N=10,000)</option>
+                </select>
+                <p id="scale_desc" class="scale_description">Simulating a massive logistics network where matrix
+                    condition number explodes.</p>
+            </div>
+        </header>
+
+        <main>
+            <div class="visualizer_container">
+                <div class="solver_view">
+                    <div class="solver_header">
+                        <h2>Standard Symmetric Solver</h2>
+                        <div class="metrics">
+                            <span id="sym_iter">Iter: 0</span>
+                            <span id="sym_status" class="status_waiting">WAITING</span>
+                        </div>
+                    </div>
+                    <canvas id="canvas_symmetric"></canvas>
+                    <div class="matrix_viz_container">
+                        <span class="viz_label">Matrix A (Symmetric): A = Aᵀ</span>
+                        <canvas id="matrix_sym" class="matrix_canvas"></canvas>
+                        <div class="matrix_legend">
+                            <span class="legend_item"><span class="legend_color"
+                                    style="background:#3b82f6"></span>対角成分</span>
+                            <span class="legend_item"><span class="legend_color" style="background:#475569"></span>疎行列要素
+                                (対称配置)</span>
+                        </div>
+                    </div>
+                    <div class="console_output" id="console_symmetric">
+                        > Initializing matrix structure...<br>
+                        > Ready.
+                    </div>
+                </div>
+
+                <div class="solver_view">
+                    <div class="solver_header">
+                        <h2>Asymmetric Solver <span class="badge">FAST</span></h2>
+                        <div class="metrics">
+                            <span id="asym_iter">Iter: 0</span>
+                            <span id="asym_status" class="status_waiting">WAITING</span>
+                        </div>
+                    </div>
+                    <canvas id="canvas_asymmetric"></canvas>
+                    <div class="matrix_viz_container">
+                        <span class="viz_label">Matrix A + E (Asymmetric): A ≠ Aᵀ</span>
+                        <canvas id="matrix_asym" class="matrix_canvas"></canvas>
+                        <div class="matrix_legend">
+                            <span class="legend_item"><span class="legend_color"
+                                    style="background:#3b82f6"></span>対角成分</span>
+                            <span class="legend_item"><span class="legend_color"
+                                    style="background:#475569"></span>疎行列要素</span>
+                            <span class="legend_item"><span class="legend_color" style="background:#10b981"></span>非対称摂動
+                                E</span>
+                        </div>
+                    </div>
+                    <div class="console_output" id="console_asymmetric">
+                        > Asymmetric perturbation loaded.<br>
+                        > Ready.
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls_area">
+                <button id="btn_run" class="btn primary">RUN SIMULATION</button>
+                <button id="btn_reset" class="btn secondary">RESET</button>
+            </div>
+
+            <div class="analysis_container">
+                <div class="chart_box">
+                    <h3>Symmetric Solver Convergence</h3>
+                    <div class="chart_wrapper">
+                        <canvas id="chart_symmetric"></canvas>
+                    </div>
+                </div>
+                <div class="chart_box">
+                    <h3>Asymmetric Solver Convergence</h3>
+                    <div class="chart_wrapper">
+                        <canvas id="chart_asymmetric"></canvas>
+                    </div>
+                </div>
+                <div class="info_box">
+                    <h3>Performance Metrics</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th>Symmetric (Old)</th>
+                                <th>Asymmetric (New)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Iterations</td>
+                                <td id="res_sym_iter">-</td>
+                                <td id="res_asym_iter" class="win">-</td>
+                            </tr>
+                            <tr>
+                                <td>Time Complexity</td>
+                                <td>~O(n^4)</td>
+                                <td class="win">~O(n^2.x)</td>
+                            </tr>
+                            <tr>
+                                <td>Final Gap</td>
+                                <td id="res_sym_gap">-</td>
+                                <td id="res_asym_gap" class="win">-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Generated by Optimization Visualization Agent for @OptimizationExpert</p>
+        </footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
